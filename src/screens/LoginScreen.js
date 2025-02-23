@@ -10,7 +10,7 @@ import BackButton from '../components/BackButton'
 import { theme } from '../core/theme'
 import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
-import { loginUser } from '../api/auth-api'
+import {loginUser, storeUserData} from '../api/auth-api'
 import Toast from '../components/Toast'
 
 export default function LoginScreen({ navigation }) {
@@ -19,30 +19,33 @@ export default function LoginScreen({ navigation }) {
   const [loading, setLoading] = useState()
   const [error, setError] = useState()
 
-  const onLoginPressed = async () => {
-    const emailError = emailValidator(email.value)
-    const passwordError = passwordValidator(password.value)
-    if (emailError || passwordError) {
-      setEmail({ ...email, error: emailError })
-      setPassword({ ...password, error: passwordError })
-      return
-    }
-    setLoading(true)
-    const response = await loginUser({
-      email: email.value,
-      password: password.value,
-    })
-      if (response.error) {
-          setError(response.error);
-      } else {
-          // ✅ Navigate to Dashboard on successful login
-          navigation.reset({
-              index: 0,
-              routes: [{ name: 'Dashboard' }],
-          });
-      }
-    setLoading(false)
-  }
+    const onLoginPressed = async () => {
+        const emailError = emailValidator(email.value);
+        const passwordError = passwordValidator(password.value);
+
+        if (emailError || passwordError) {
+            setEmail({ ...email, error: emailError });
+            setPassword({ ...password, error: passwordError });
+            return;
+        }
+
+        setLoading(true);
+        const response = await loginUser({
+            email: email.value,
+            password: password.value,
+        });
+
+        setLoading(false);
+
+        if (response.error) {
+            setError(response.error);
+        } else {
+            // After successful login, store user data if email is verified
+            await storeUserData(response.user);
+            navigation.replace('HomeScreen');
+        }
+    };
+
 
   return (
     <Background>

@@ -3,7 +3,6 @@ import { Provider } from 'react-native-paper';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { initializeApp, getApps } from 'firebase/app'; // Correct Firebase import
-import { getAuth } from 'firebase/auth';
 import { theme } from './src/core/theme';
 import {
   AuthLoadingScreen,
@@ -11,9 +10,10 @@ import {
   LoginScreen,
   RegisterScreen,
   ResetPasswordScreen,
-  Dashboard,
+  Dashboard
 } from './src/screens';
 import { FIREBASE_CONFIG } from './src/core/config';
+import HomeScreen from "./src/screens/HomeScreen";
 
 const Stack = createStackNavigator();
 
@@ -37,6 +37,7 @@ export default function App() {
             <Stack.Screen name="LoginScreen" component={LoginScreen} />
             <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
             <Stack.Screen name="Dashboard" component={Dashboard} />
+              <Stack.Screen name="HomeScreen" component={HomeScreen} />
             <Stack.Screen name="ResetPasswordScreen" component={ResetPasswordScreen} />
           </Stack.Navigator>
         </NavigationContainer>

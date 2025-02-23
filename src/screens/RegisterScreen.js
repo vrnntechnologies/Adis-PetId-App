@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import {View, StyleSheet, TouchableOpacity, Alert} from 'react-native'
 import { Text } from 'react-native-paper'
 import Background from '../components/Background'
 import Logo from '../components/Logo'
@@ -21,27 +21,35 @@ export default function RegisterScreen({ navigation }) {
   const [loading, setLoading] = useState()
   const [error, setError] = useState()
 
-  const onSignUpPressed = async () => {
-    const nameError = nameValidator(name.value)
-    const emailError = emailValidator(email.value)
-    const passwordError = passwordValidator(password.value)
-    if (emailError || passwordError || nameError) {
-      setName({ ...name, error: nameError })
-      setEmail({ ...email, error: emailError })
-      setPassword({ ...password, error: passwordError })
-      return
-    }
-    setLoading(true)
-    const response = await signUpUser({
-      name: name.value,
-      email: email.value,
-      password: password.value,
-    })
-    if (response.error) {
-      setError(response.error)
-    }
-    setLoading(false)
-  }
+    const onSignUpPressed = async () => {
+        const nameError = nameValidator(name.value);
+        const emailError = emailValidator(email.value);
+        const passwordError = passwordValidator(password.value);
+
+        if (emailError || passwordError || nameError) {
+            setName({ ...name, error: nameError });
+            setEmail({ ...email, error: emailError });
+            setPassword({ ...password, error: passwordError });
+            return;
+        }
+
+        setLoading(true);
+        const response = await signUpUser({
+            name: name.value,
+            email: email.value,
+            password: password.value,
+        });
+
+        setLoading(false);
+
+        if (response.error) {
+            setError(response.error);
+        } else {
+            Alert.alert('Success', response.message);
+            navigation.replace('LoginScreen'); // Redirect to login
+        }
+    };
+
 
   return (
     <Background>

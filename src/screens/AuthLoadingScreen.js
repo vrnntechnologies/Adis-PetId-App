@@ -3,6 +3,7 @@ import { ActivityIndicator, View, Text } from 'react-native';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import Background from '../components/Background';
 import { theme } from '../core/theme';
+import HomeScreen from "./HomeScreen";
 
 export default function AuthLoadingScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
@@ -26,7 +27,7 @@ export default function AuthLoadingScreen({ navigation }) {
       if (user) {
         navigation.reset({
           index: 0,
-          routes: [{ name: 'Dashboard' }],
+          routes: [{ name: 'HomeScreen' }],
         });
       } else {
         navigation.reset({
